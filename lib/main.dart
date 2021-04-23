@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'game_map_screen.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -13,27 +15,80 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Jogo da Política de Educação Aberta'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController _playerCountController = new TextEditingController();
+  TextEditingController _educationalPolicyController =
+      new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("Jogo da Política de Educação Aberta"),
       ),
-      body: Center(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        padding: EdgeInsets.all(25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Bem vindo ao Jogo da Política de Educação Aberta",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Text(
+              "Para começar, preencha os campos abaixo e clique em \"Começar\"",
+              textAlign: TextAlign.center,
+            ),
+            TextField(
+              controller: _playerCountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Número de jogadores",
+              ),
+            ),
+            TextField(
+              controller: _educationalPolicyController,
+              decoration: InputDecoration(
+                labelText: "Política de Educação Aberta",
+              ),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => GameMapScreen(
+                      playerCount: int.parse(_playerCountController.text),
+                      educationalPolicy: _educationalPolicyController.text,
+                    ),
+                  ),
+                ),
+              },
+              child: Text("Começar"),
+            )
+          ],
+        ),
       ),
     );
   }
