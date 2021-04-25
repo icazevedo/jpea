@@ -41,8 +41,7 @@ class _GameMapScreenState extends State<GameMapScreen> {
             child: ListBody(
               children: <Widget>[
                 Text('Todo o progresso do jogo será perdido.'),
-                Text(
-                    'Você tem certeza que deseja voltar à tela inicial e cancelar o jogo atual?'),
+                Text('Você tem certeza que deseja voltar à tela inicial e cancelar o jogo atual?'),
               ],
             ),
           ),
@@ -138,7 +137,7 @@ class _GameMapScreenState extends State<GameMapScreen> {
                   height: double.infinity,
                   width: double.infinity,
                   color: Color(0xffB2D5D4),
-                  padding: EdgeInsets.all(25),
+                  padding: EdgeInsets.all(20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

@@ -38,57 +38,48 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text("Jogo da Política de Educação Aberta"),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        padding: EdgeInsets.all(25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Bem vindo ao Jogo da Política de Educação Aberta",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+      body: ListView(
+        padding: const EdgeInsets.all(25),
+        children: <Widget>[
+          Text(
+            "Bem vindo ao Jogo da Política de Educação Aberta",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 25),
+          Text(
+            "Para começar, preencha os campos abaixo e clique em \"Começar\"",
+            textAlign: TextAlign.center,
+          ),
+          TextField(
+            controller: _playerCountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Número de jogadores",
             ),
-            SizedBox(
-              height: 25,
+          ),
+          TextField(
+            controller: _educationalPolicyController,
+            decoration: InputDecoration(
+              labelText: "Política de Educação Aberta",
             ),
-            Text(
-              "Para começar, preencha os campos abaixo e clique em \"Começar\"",
-              textAlign: TextAlign.center,
-            ),
-            TextField(
-              controller: _playerCountController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Número de jogadores",
-              ),
-            ),
-            TextField(
-              controller: _educationalPolicyController,
-              decoration: InputDecoration(
-                labelText: "Política de Educação Aberta",
-              ),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            ElevatedButton(
-              onPressed: () => {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => GameMapScreen(
-                      playerCount: int.parse(_playerCountController.text),
-                      educationalPolicy: _educationalPolicyController.text,
-                    ),
+          ),
+          const SizedBox(height: 25),
+          ElevatedButton(
+            onPressed: () => {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => GameMapScreen(
+                    playerCount: int.parse(_playerCountController.text),
+                    educationalPolicy: _educationalPolicyController.text,
                   ),
                 ),
-              },
-              child: Text("Começar"),
-            )
-          ],
-        ),
+              ),
+            },
+            child: Text("Começar"),
+          )
+        ],
       ),
     );
   }

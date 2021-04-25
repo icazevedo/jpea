@@ -55,16 +55,12 @@ class _DiagnosticCardScreenState extends State<DiagnosticCardScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
-              height: 15,
-            ),
+            const SizedBox(height: 15),
             Text(
               "O temporizador abaixo indica o tempo sugerido para discussão a respeito da carta diagnóstico acima.",
               textAlign: TextAlign.justify,
             ),
-            SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             CountdownTimer(
               endTime: endTime,
               endWidget: Text(
@@ -96,9 +92,7 @@ class _DiagnosticCardScreenState extends State<DiagnosticCardScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
           Text.rich(
             TextSpan(
               text: "Leia em ",
@@ -177,18 +171,21 @@ class _DiagnosticCardScreenState extends State<DiagnosticCardScreen> {
         title: Text("Carta diagnóstico"),
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+        child: ListView(
+          children: <Widget>[
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                DiagnosticCard(
-                  id: 0,
+                Column(
+                  children: [
+                    DiagnosticCard(id: 0),
+                    _buildBelowTheCardContent(),
+                  ],
                 ),
-                _buildBelowTheCardContent()
+                const SizedBox(height: 10),
+                _buildNextStepsContent()
               ],
             ),
-            _buildNextStepsContent()
           ],
         ),
       ),
