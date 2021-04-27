@@ -1,20 +1,23 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'diagnostic_card.dart';
 import 'diagnostic_card_screen.dart';
+import 'diagnostic_cards_data.dart';
 import 'main.dart';
 
 class GameMapScreen extends StatefulWidget {
   final int playerCount;
   final String educationalPolicy;
-  final int diagnosticCardToAddToTop;
-  final int diagnosticCardToAddToBottom;
+  final List<int> topCards;
+  final List<int> bottomCards;
 
   GameMapScreen({
     @required this.playerCount,
     @required this.educationalPolicy,
-    this.diagnosticCardToAddToTop,
-    this.diagnosticCardToAddToBottom,
+    this.topCards = const [],
+    this.bottomCards = const [],
   });
 
   @override
@@ -22,12 +25,26 @@ class GameMapScreen extends StatefulWidget {
 }
 
 class _GameMapScreenState extends State<GameMapScreen> {
-  @override
-  void initState() {
-    super.initState();
+  void _takeDiagnosticCard() {
+    List<int> alreadyPlayedIds = [...widget.topCards, ...widget.bottomCards];
+    List<int> remainingIds = DiagnosticCardsData.diagnosticCardsIds
+        .where(
+          (id) => !alreadyPlayedIds.contains(id),
+        )
+        .toList();
 
-    // TODO: add card to bottom in case there is
-    // TODO: add card to top in case there is
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DiagnosticCardScreen(
+          playerCount: widget.playerCount,
+          educationalPolicy: widget.educationalPolicy,
+          cardId: remainingIds[Random().nextInt(remainingIds.length)],
+          topCards: widget.topCards,
+          bottomCards: widget.bottomCards,
+        ),
+      ),
+    );
   }
 
   Future<void> _cancelGameDialog() async {
@@ -41,7 +58,8 @@ class _GameMapScreenState extends State<GameMapScreen> {
             child: ListBody(
               children: <Widget>[
                 Text('Todo o progresso do jogo será perdido.'),
-                Text('Você tem certeza que deseja voltar à tela inicial e cancelar o jogo atual?'),
+                Text(
+                    'Você tem certeza que deseja voltar à tela inicial e cancelar o jogo atual?'),
               ],
             ),
           ),
@@ -67,6 +85,44 @@ class _GameMapScreenState extends State<GameMapScreen> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildTopCards() {
+    if (widget.topCards.length == 0) {
+      return Center(
+        child: Text(
+          "Sem cartas acima. Continue jogando!",
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: widget.topCards.length,
+      itemBuilder: (_, index) => DiagnosticCard(
+        id: widget.topCards[index],
+      ),
+    );
+  }
+
+  Widget _buildBottomCards() {
+    if (widget.bottomCards.length == 0) {
+      return Center(
+        child: Text(
+          "Sem cartas abaixo. Continue jogando!",
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: widget.bottomCards.length,
+      itemBuilder: (_, index) => DiagnosticCard(
+        id: widget.bottomCards[index],
+      ),
     );
   }
 
@@ -121,11 +177,7 @@ class _GameMapScreenState extends State<GameMapScreen> {
                         ),
                       ),
                       Expanded(
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (_, index) => DiagnosticCard(id: index),
-                        ),
+                        child: _buildTopCards(),
                       ),
                     ],
                   ),
@@ -164,17 +216,7 @@ class _GameMapScreenState extends State<GameMapScreen> {
                               width: 1,
                             ),
                             highlightedBorderColor: Colors.blueGrey[800],
-                            onPressed: () => {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => DiagnosticCardScreen(
-                                    playerCount: widget.playerCount,
-                                    educationalPolicy: widget.educationalPolicy,
-                                  ),
-                                ),
-                              ),
-                            },
+                            onPressed: _takeDiagnosticCard,
                             child: Row(
                               children: [
                                 Text(
@@ -211,11 +253,7 @@ class _GameMapScreenState extends State<GameMapScreen> {
                         ),
                       ),
                       Expanded(
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (_, index) => DiagnosticCard(id: index),
-                        ),
+                        child: _buildBottomCards(),
                       ),
                     ],
                   ),

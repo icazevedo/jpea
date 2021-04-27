@@ -6,12 +6,18 @@ import 'game_map_screen.dart';
 class FinishedVotingScreen extends StatefulWidget {
   final int playerCount;
   final String educationalPolicy;
+  final int cardId;
   final bool shouldAddCardToTop;
+  final List<int> topCards;
+  final List<int> bottomCards;
 
   FinishedVotingScreen({
-    this.playerCount,
-    this.educationalPolicy,
-    this.shouldAddCardToTop,
+    @required this.playerCount,
+    @required this.educationalPolicy,
+    @required this.cardId,
+    @required this.shouldAddCardToTop,
+    @required this.topCards,
+    @required this.bottomCards,
   });
 
   @override
@@ -19,6 +25,29 @@ class FinishedVotingScreen extends StatefulWidget {
 }
 
 class _FinishedVotingScreenState extends State<FinishedVotingScreen> {
+  void _goToGameMap() {
+    List<int> updatedTopCards = [...widget.topCards];
+    List<int> updatedBottomCards = [...widget.bottomCards];
+
+    if (widget.shouldAddCardToTop) {
+      updatedTopCards.add(widget.cardId);
+    } else {
+      updatedBottomCards.add(widget.cardId);
+    }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => GameMapScreen(
+          educationalPolicy: widget.educationalPolicy,
+          playerCount: widget.playerCount,
+          topCards: updatedTopCards,
+          bottomCards: updatedBottomCards,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     String title = "A carta diagnóstico foi " +
@@ -28,11 +57,11 @@ class _FinishedVotingScreenState extends State<FinishedVotingScreen> {
 
     if (widget.shouldAddCardToTop) {
       description =
-          "A maioria dos participantes acreditam que o conteúdo da carta diagnóstico está presente na " +
+          "A maioria dos participantes acredita que o conteúdo da carta diagnóstico está presente na " +
               "Política de Educação Aberta escolhida. Ela será adicionada na lista superior do mapa do jogo.";
     } else {
       description =
-          "A maioria dos participantes acreditam que o conteúdo da carta diagnóstico não está presente na " +
+          "A maioria dos participantes acredita que o conteúdo da carta diagnóstico não está presente na " +
               "Política de Educação Aberta escolhida. Ela será adicionada na lista inferior do mapa do jogo.";
     }
 
@@ -49,7 +78,7 @@ class _FinishedVotingScreenState extends State<FinishedVotingScreen> {
             children: [
               Column(
                 children: [
-                  DiagnosticCard(id: 0),
+                  DiagnosticCard(id: widget.cardId),
                   Container(
                     padding: EdgeInsets.all(25),
                     child: Column(
@@ -77,18 +106,7 @@ class _FinishedVotingScreenState extends State<FinishedVotingScreen> {
               Container(
                 padding: EdgeInsets.fromLTRB(25, 0, 25, 25),
                 child: ElevatedButton(
-                  onPressed: () => {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => GameMapScreen(
-                          // TODO: add to bottom or top according to shouldAddCardToTop
-                          educationalPolicy: widget.educationalPolicy,
-                          playerCount: widget.playerCount,
-                        ),
-                      ),
-                    ),
-                  },
+                  onPressed: _goToGameMap,
                   child: Text(
                     "Voltar ao mapa",
                   ),

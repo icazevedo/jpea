@@ -7,10 +7,16 @@ import 'voting_screen.dart';
 class DiagnosticCardScreen extends StatefulWidget {
   final int playerCount;
   final String educationalPolicy;
+  final int cardId;
+  final List<int> topCards;
+  final List<int> bottomCards;
 
   const DiagnosticCardScreen({
     @required this.playerCount,
     @required this.educationalPolicy,
+    @required this.cardId,
+    @required this.topCards,
+    @required this.bottomCards,
   });
 
   @override
@@ -36,6 +42,9 @@ class _DiagnosticCardScreenState extends State<DiagnosticCardScreen> {
         builder: (_) => VotingScreen(
           playerCount: widget.playerCount,
           educationalPolicy: widget.educationalPolicy,
+          cardId: widget.cardId,
+          topCards: widget.topCards,
+          bottomCards: widget.bottomCards,
         ),
       ),
     );
@@ -178,7 +187,7 @@ class _DiagnosticCardScreenState extends State<DiagnosticCardScreen> {
               children: [
                 Column(
                   children: [
-                    DiagnosticCard(id: 0),
+                    DiagnosticCard(id: widget.cardId),
                     _buildBelowTheCardContent(),
                   ],
                 ),

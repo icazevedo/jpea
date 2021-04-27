@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'diagnostic_cards_data.dart';
 
 class DiagnosticCard extends StatelessWidget {
   final int id;
@@ -8,10 +9,12 @@ class DiagnosticCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(25),
-      width: 300,
       height: 300,
-      color: Colors.red[300],
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      alignment: Alignment.center,
+      child: Image.asset(
+        DiagnosticCardsData.diagnosticCards[id],
+      ),
     );
   }
 }
