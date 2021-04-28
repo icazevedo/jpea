@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:jpea/poll_card_screen.dart';
 
 import 'diagnostic_card.dart';
 import 'diagnostic_card_screen.dart';
@@ -32,19 +33,40 @@ class _GameMapScreenState extends State<GameMapScreen> {
           (id) => !alreadyPlayedIds.contains(id),
         )
         .toList();
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => DiagnosticCardScreen(
-          playerCount: widget.playerCount,
-          educationalPolicy: widget.educationalPolicy,
-          cardId: remainingIds[Random().nextInt(remainingIds.length)],
-          topCards: widget.topCards,
-          bottomCards: widget.bottomCards,
+    if (remainingIds.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => DiagnosticCardScreen(
+            playerCount: widget.playerCount,
+            educationalPolicy: widget.educationalPolicy,
+            cardId: remainingIds[Random().nextInt(remainingIds.length)],
+            topCards: widget.topCards,
+            bottomCards: widget.bottomCards,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PollCardScreen(
+              playerCount: widget.playerCount,
+              educationalPolicy: widget.educationalPolicy,
+              topCards: widget.topCards),
+        ),
+      );
+    }
+  }
+
+  bool hasRemainingCards() {
+    List<int> alreadyPlayedIds = [...widget.topCards, ...widget.bottomCards];
+    List<int> remainingIds = DiagnosticCardsData.diagnosticCardsIds
+        .where(
+          (id) => !alreadyPlayedIds.contains(id),
+        )
+        .toList();
+    return remainingIds.isNotEmpty;
   }
 
   Future<void> _cancelGameDialog() async {
@@ -220,7 +242,9 @@ class _GameMapScreenState extends State<GameMapScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  "Puxar carta diagnóstico",
+                                  hasRemainingCards()
+                                      ? "Puxar carta diagnóstico"
+                                      : "Distribuir votos",
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 SizedBox(
